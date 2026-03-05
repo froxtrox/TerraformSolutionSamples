@@ -25,4 +25,7 @@ override.tf.json
 
 # Include .terraformrc and terraform.rc if you are using Terraform Cloud to manage CLI configuration
 .terraformrc
-terraform.rc 
+terraform.rc
+
+# Backend config files (contain real storage account details)
+backend.conf
