@@ -15,8 +15,8 @@ Shared Azure Function that facilitates email communication using Azure Communica
 
     ```sh
     az group create -l uksouth -n rg-terraform-state
-    az storage account create -n stterraformstategze5 -g rg-terraform-state
-    az storage container create -n tfstate --account-name stterraformstategze5
+    az storage account create -n <your-storage-account-name> -g rg-terraform-state
+    az storage container create -n tfstate --account-name <your-storage-account-name>
     ```
 
 2. Navigate to the project directory:
