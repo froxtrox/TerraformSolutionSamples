@@ -109,6 +109,16 @@ resource "azurerm_linux_function_app" "func" {
   }
 }
 
+resource "azurerm_monitor_diagnostic_setting" "acs_diag" {
+  name                       = "diag-acs-${var.project_name}"
+  target_resource_id         = azurerm_communication_service.acs.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
+
+  enabled_log { category = "EmailSendMailOperational" }
+  enabled_log { category = "EmailStatusUpdateOperational" }
+  enabled_log { category = "EmailUserEngagementOperational" }
+}
+
 resource "azurerm_role_assignment" "func_acs_contributor" {
   scope                = azurerm_communication_service.acs.id
   role_definition_name = "Contributor"
