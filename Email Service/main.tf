@@ -81,8 +81,19 @@ resource "azurerm_linux_function_app" "func" {
   storage_account_name       = azurerm_storage_account.sa.name
   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
   service_plan_id            = azurerm_service_plan.asp.id
-  https_only                 = true
-  tags                       = var.tags
+  https_only                                     = true
+  ftp_publish_basic_authentication_enabled       = false
+  webdeploy_publish_basic_authentication_enabled = false
+  tags                                           = var.tags
+
+  lifecycle {
+    ignore_changes = [
+      app_settings["WEBSITE_MOUNT_ENABLED"],
+      app_settings["WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED"],
+      tags["hidden-link: /app-insights-resource-id"],
+      site_config[0].cors[0].allowed_origins,
+    ]
+  }
 
   identity {
     type = "SystemAssigned"
