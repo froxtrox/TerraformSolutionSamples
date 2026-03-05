@@ -1,7 +1,7 @@
 # Email Service
 
 Shared Azure Function that facilitates email communication using Azure Communication Services for email delivery. Built with C# .NET 10 (isolated worker), secured with Managed Identity and Function Keys.
- 
+
 
 ## Prerequisites
 
