@@ -1,3 +1,7 @@
+resource "random_id" "suffix" {
+  byte_length = 2
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = "rg-${var.project_name}"
   location = var.location
@@ -5,7 +9,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_storage_account" "sa" {
-  name                     = replace("st${var.project_name}", "-", "")
+  name                     = replace("st${var.project_name}${random_id.suffix.hex}", "-", "")
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -42,16 +46,16 @@ resource "azurerm_application_insights" "ai" {
 }
 
 resource "azurerm_communication_service" "acs" {
-  name                = "acs-${var.project_name}"
+  name                = "acs-${var.project_name}-${random_id.suffix.hex}"
   resource_group_name = azurerm_resource_group.rg.name
-  data_location       = "UK"
+  data_location       = "Europe"
   tags                = var.tags
 }
 
 resource "azurerm_email_communication_service" "ecs" {
-  name                = "ecs-${var.project_name}"
+  name                = "ecs-${var.project_name}-${random_id.suffix.hex}"
   resource_group_name = azurerm_resource_group.rg.name
-  data_location       = "UK"
+  data_location       = "Europe"
   tags                = var.tags
 }
 
@@ -71,7 +75,7 @@ locals {
 }
 
 resource "azurerm_linux_function_app" "func" {
-  name                       = "func-${var.project_name}"
+  name                       = "func-${var.project_name}-${random_id.suffix.hex}"
   resource_group_name        = azurerm_resource_group.rg.name
   location                   = azurerm_resource_group.rg.location
   storage_account_name       = azurerm_storage_account.sa.name
@@ -86,7 +90,7 @@ resource "azurerm_linux_function_app" "func" {
 
   site_config {
     application_stack {
-      dotnet_version              = "10.0"
+      dotnet_version              = "8.0"
       use_dotnet_isolated_runtime = true
     }
 
@@ -101,6 +105,7 @@ resource "azurerm_linux_function_app" "func" {
     "RECIPIENT_EMAIL"                       = var.recipient_email
     "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.ai.connection_string
     "FUNCTIONS_WORKER_RUNTIME"              = "dotnet-isolated"
+    "WEBSITE_RUN_FROM_PACKAGE"              = "1"
   }
 }
 

@@ -10,7 +10,7 @@ variable "project_name" {
 
 variable "location" {
   type    = string
-  default = "uksouth"
+  default = "westeurope"
 }
 
 variable "recipient_email" {
