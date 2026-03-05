@@ -2,6 +2,34 @@
 
 Shared Azure Function that facilitates email communication using Azure Communication Services for email delivery. Built with C# .NET 8 (isolated worker), secured with Managed Identity and Function Keys.
 
+## Architecture Diagram
+
+```mermaid
+graph TD;
+  subgraph rg-email-service-api
+    azurerm_storage_account["Storage Account"]
+    azurerm_service_plan["App Service Plan"]
+    azurerm_log_analytics_workspace["Log Analytics Workspace"]
+    azurerm_application_insights["Application Insights"]
+    azurerm_communication_service["Azure Communication Service"]
+    azurerm_email_communication_service["Email Communication Service"]
+    azurerm_email_communication_service_domain["Azure Managed Domain"]
+    azurerm_communication_service_email_domain_association["Email Domain Association"]
+    azurerm_linux_function_app["Linux Function App"]
+    azurerm_monitor_diagnostic_setting["ACS Diagnostic Setting"]
+  end
+
+  azurerm_service_plan --> azurerm_linux_function_app
+  azurerm_storage_account --> azurerm_linux_function_app
+  azurerm_linux_function_app -->|"Managed Identity (Contributor)"| azurerm_communication_service
+  azurerm_linux_function_app --> azurerm_application_insights
+  azurerm_email_communication_service --> azurerm_email_communication_service_domain
+  azurerm_email_communication_service_domain --> azurerm_communication_service_email_domain_association
+  azurerm_communication_service --> azurerm_communication_service_email_domain_association
+  azurerm_application_insights --> azurerm_log_analytics_workspace
+  azurerm_communication_service --> azurerm_monitor_diagnostic_setting
+  azurerm_monitor_diagnostic_setting --> azurerm_log_analytics_workspace
+```
 
 ## Prerequisites
 
